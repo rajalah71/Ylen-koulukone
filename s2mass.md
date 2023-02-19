@@ -95,14 +95,15 @@ ovat laskevassa järjestyksessä:
     kuin alueilla, jossa ei ole yhtään S2-oppilasta.
 
 Loput taustamuuttujista eivät olleet tilastollisesti merkityksellisiä.
-Mallin diagnostiikkaa
+
+### Mallin diagnostiikkaa
 
 ``` r
 par(mfrow = c(2,2))
 plot(model1)
 ```
 
-![](s2koulukone_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](s2mass_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 Residuaalit poikkeavat hieman normaalista jakauman hännillä. Muuten
 diagnostiikka näyttää hyvältä.
