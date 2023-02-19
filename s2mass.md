@@ -9,13 +9,10 @@ päättäneiden keskiarvosanoja ja alueen mediaanituloja,
 korkeakoulutustasoa, työllisyysastetta sekä S2-oppilaiden osuutta
 (<https://yle.fi/a/74-20016772>). Tässä dokumentissa pyritään
 selvittämään näiden ja muutaman muun taustamuuttujan vaikutus koulujen
-keskiarvosanoihin.
+keskiarvosanoihin. Huomautus datasta
 
-### Huomautus datasta
-
-Yli 60% kouluista ei ollut keskiarvosanaa datassa, eikä puuttumisen
-syytä tiedetä, joten mallin johtopäätökset eivät välttämättä pidä
-paikkansa.
+Tulokset ovat valideja vain yläkouluille. Alakouluissa ei suurimmaksi
+osaksi ollut keskiarvodataa.
 
 ``` r
 mean(is.na(data$keskiarvo))
@@ -53,32 +50,31 @@ data_scaled[is.na(data_scaled)] = 0
 Tehdään robusti lineaarinen malli.
 
 ``` r
-model1 = rlm(keskiarvo ~ tyollisyysaste + s2_osuus + korkeakouluaste + oppilaitosnimi + postinumeroalue+ asukkaat_yht + asukkaiden_mediaanitulo + oppilaita_yhteensa, data = data_scaled)
+model1 = rlm(keskiarvo ~ tyollisyysaste + s2_osuus + korkeakouluaste + oppilaitosnimi + asukkaat_yht + asukkaiden_mediaanitulo + oppilaita_yhteensa, data = data_scaled)
 summary(model1)
 ```
 
     ## 
     ## Call: rlm(formula = keskiarvo ~ tyollisyysaste + s2_osuus + korkeakouluaste + 
-    ##     oppilaitosnimi + postinumeroalue + asukkaat_yht + asukkaiden_mediaanitulo + 
+    ##     oppilaitosnimi + asukkaat_yht + asukkaiden_mediaanitulo + 
     ##     oppilaita_yhteensa, data = data_scaled)
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -1.80307 -0.17528 -0.01038  0.16731  1.61104 
+    ## -1.80258 -0.17522 -0.01067  0.16781  1.61146 
     ## 
     ## Coefficients:
     ##                                              Value    Std. Error t value 
-    ## (Intercept)                                    7.9491   0.2333    34.0784
-    ## tyollisyysaste                                 0.0200   0.2514     0.0797
-    ## s2_osuus                                      -0.4009   0.1097    -3.6548
-    ## korkeakouluaste                                1.8756   0.1926     9.7375
-    ## oppilaitosnimiPeruskouluasteen erityiskoulut  -1.1206   0.0849   -13.2022
-    ## oppilaitosnimiPeruskoulut                     -0.2220   0.0613    -3.6245
-    ## postinumeroalue                               -0.0030   0.0453    -0.0659
-    ## asukkaat_yht                                  -0.1261   0.0842    -1.4980
-    ## asukkaiden_mediaanitulo                       -0.1951   0.2071    -0.9417
-    ## oppilaita_yhteensa                            -0.0212   0.0825    -0.2572
+    ## (Intercept)                                    7.9452   0.2218    35.8281
+    ## tyollisyysaste                                 0.0203   0.2504     0.0812
+    ## s2_osuus                                      -0.3989   0.1061    -3.7608
+    ## korkeakouluaste                                1.8746   0.1915     9.7906
+    ## oppilaitosnimiPeruskouluasteen erityiskoulut  -1.1217   0.0841   -13.3433
+    ## oppilaitosnimiPeruskoulut                     -0.2225   0.0608    -3.6580
+    ## asukkaat_yht                                  -0.1250   0.0825    -1.5143
+    ## asukkaiden_mediaanitulo                       -0.1906   0.1934    -0.9854
+    ## oppilaita_yhteensa                            -0.0214   0.0824    -0.2604
     ## 
-    ## Residual standard error: 0.2547 on 606 degrees of freedom
+    ## Residual standard error: 0.2546 on 607 degrees of freedom
 
 Keskiarvosana kouluilla on 7.9. Tilastollisesti merkitsevät muuttujat
 ovat laskevassa järjestyksessä:
@@ -99,15 +95,14 @@ ovat laskevassa järjestyksessä:
     kuin alueilla, jossa ei ole yhtään S2-oppilasta.
 
 Loput taustamuuttujista eivät olleet tilastollisesti merkityksellisiä.
-
-### Mallin diagnostiikkaa
+Mallin diagnostiikkaa
 
 ``` r
 par(mfrow = c(2,2))
 plot(model1)
 ```
 
-![](s2mass_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](s2koulukone_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 Residuaalit poikkeavat hieman normaalista jakauman hännillä. Muuten
 diagnostiikka näyttää hyvältä.
@@ -117,13 +112,12 @@ vif(model1)
 ```
 
     ##                             GVIF Df GVIF^(1/(2*Df))
-    ## tyollisyysaste          1.374257  1        1.172287
-    ## s2_osuus                1.429622  1        1.195668
-    ## korkeakouluaste         3.377472  1        1.837790
-    ## oppilaitosnimi          1.583023  2        1.121687
-    ## postinumeroalue         1.489101  1        1.220287
-    ## asukkaat_yht            1.548416  1        1.244354
-    ## asukkaiden_mediaanitulo 2.757717  1        1.660637
-    ## oppilaita_yhteensa      1.485490  1        1.218807
+    ## tyollisyysaste          1.367410  1        1.169363
+    ## s2_osuus                1.340767  1        1.157915
+    ## korkeakouluaste         3.347050  1        1.829494
+    ## oppilaitosnimi          1.555482  2        1.116776
+    ## asukkaat_yht            1.493037  1        1.221899
+    ## asukkaiden_mediaanitulo 2.410760  1        1.552662
+    ## oppilaita_yhteensa      1.485473  1        1.218800
 
 Selittävät muuttujat eivät ole liian riippuvia toisistaan.
